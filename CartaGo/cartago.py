@@ -74,10 +74,19 @@ def main():
         sys.exit()
 
     # Download the frameworks
-    os.system("carthage update --platform iOS --no-use-binaries --cache-builds")
+    if os.path.exists("Cartfile"):
+        os.system("carthage update --platform iOS --no-use-binaries --cache-builds")
+    else:
+        print "Cannot find any 'Cartfile' at current directory"
+        sys.exit()
 
     # # Add frameworks to the project
     frameworksPath = "Carthage/Build/iOS/"
+
+    if not os.path.isdir(frameworksPath):
+        print "Cannot find " + frameworksPath
+        sys.exit()
+
     frameworksGroup = xcodeProject.get_or_create_group('Frameworks')
     file_options = FileOptions(embed_framework=False)
     frameworks = []
