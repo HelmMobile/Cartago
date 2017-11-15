@@ -3,10 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
   name = 'cartago',
-  packages = [''],
-  package_dir={
-    '' :  'cartago'
-  },
+  packages = find_packages(),
   install_requires=['pbxproj==2.1.2'],
   entry_points={
     'console_scripts': [

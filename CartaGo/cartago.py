@@ -55,12 +55,15 @@ def addCarthageScript(frameworks):
     for target in xcodeProject.objects.get_targets():
         target.add_build_phase(shellBuildPhase, None)
 
-xcodeProjectFile = None
+
 xcodeProject = None
 frameworksPath = None
 
 # Program start
 def main():
+    global xcodeProject, frameworksPath
+
+    xcodeProjectFile = None
     # Open xcode project and get app name
     xcodeProjectFile = findFileWithExtension("xcodeproj", "./")
     if xcodeProjectFile != None:
