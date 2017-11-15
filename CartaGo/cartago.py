@@ -100,7 +100,7 @@ def main():
 
     print "\nFinished with success\n"
     print "..........................."
-    print "Made with ♡  by HELM S.C.P."
+    print "   Made with ♡  by HELM"
     print "...........................\n"
 
 if __name__ == "__main__":
