@@ -55,50 +55,50 @@ def addCarthageScript(frameworks):
     for target in xcodeProject.objects.get_targets():
         target.add_build_phase(shellBuildPhase, None)
 
-
-
-# Program start
 xcodeProjectFile = None
 xcodeProject = None
+frameworksPath = None
 
-# Open xcode project and get app name
-xcodeProjectFile = findFileWithExtension("xcodeproj", "./")
-if xcodeProjectFile != None:
-    APP_NAME = os.path.splitext(xcodeProjectFile)[0]
-    xcodeFileName = os.path.splitext(xcodeProjectFile)[0]
-    xcodeProject = XcodeProject.load(xcodeFileName + ".xcodeproj/project.pbxproj")
-else:
-    print "Cannot find any .xcodeproj at the current directory"
-    sys.exit()
+# Program start
+def main():
+    # Open xcode project and get app name
+    xcodeProjectFile = findFileWithExtension("xcodeproj", "./")
+    if xcodeProjectFile != None:
+        xcodeFileName = os.path.splitext(xcodeProjectFile)[0]
+        xcodeProject = XcodeProject.load(xcodeFileName + ".xcodeproj/project.pbxproj")
+    else:
+        print "Cannot find any .xcodeproj at the current directory"
+        sys.exit()
 
+    # Download the frameworks
+    os.system("carthage update --platform iOS --no-use-binaries --cache-builds")
 
-# Download the frameworks
-os.system("carthage update --platform iOS --no-use-binaries --cache-builds")
+    # # Add frameworks to the project
+    frameworksPath = "Carthage/Build/iOS/"
+    frameworksGroup = xcodeProject.get_or_create_group('Frameworks')
+    file_options = FileOptions(embed_framework=False)
+    frameworks = []
 
+    for file in os.listdir(frameworksPath):
+        if fnmatch.fnmatch(file, '*.framework'):
+            frameworks.append(file)
+            xcodeProject.add_file(frameworksPath + file, parent=frameworksGroup, force=False, file_options=file_options)
 
-# # Add frameworks to the project
-frameworksPath = "Carthage/Build/iOS/"
-frameworksGroup = xcodeProject.get_or_create_group('Frameworks')
-file_options = FileOptions(embed_framework=False)
-frameworks = []
+    library_path = os.path.join(u'$(SRCROOT)', frameworksPath)
+    xcodeProject.remove_framework_search_paths([u'$(inherited)', library_path])
+    xcodeProject.add_framework_search_paths([u'$(inherited)', library_path], recursive=False)
 
-for file in os.listdir(frameworksPath):
-    if fnmatch.fnmatch(file, '*.framework'):
-        frameworks.append(file)
-        xcodeProject.add_file(frameworksPath + file, parent=frameworksGroup, force=False, file_options=file_options)
+    # Add carthage script with new frameworks
+    addCarthageScript(frameworks)
 
-library_path = os.path.join(u'$(SRCROOT)', frameworksPath)
-xcodeProject.remove_framework_search_paths([u'$(inherited)', library_path])
-xcodeProject.add_framework_search_paths([u'$(inherited)', library_path], recursive=False)
+    # Close xcode project
+    if xcodeProject != None:
+        xcodeProject.save()
 
-# Add carthage script with new frameworks
-addCarthageScript(frameworks)
+    print "\nFinished with success\n"
+    print "..........................."
+    print "Made with ♡  by HELM S.C.P."
+    print "...........................\n"
 
-# Close xcode project
-if xcodeProject != None:
-    xcodeProject.save()
-
-print "\nFinished with success\n"
-print "..........................."
-print "Made with ♡  by HELM S.C.P."
-print "...........................\n"
+if __name__ == "__main__":
+    main()
