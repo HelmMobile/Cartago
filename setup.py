@@ -15,7 +15,7 @@ setup(
   author = 'HELM S.C.P.',
   author_email = 'pypi@helm.cat',
   url = 'https://github.com/HelmMobile/Cartago',
-  download_url = 'https://github.com/peterldowns/mypackage/archive/0.1.tar.gz',
+  download_url = 'https://github.com/HelmMobile/Cartago/archive/0.2.tar.gz',
   keywords = ['carthage', 'swift', 'xcode', 'ios', "framework", "script", "xcode project"],
   classifiers = [],
 )
