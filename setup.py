@@ -1,7 +1,15 @@
-from distutils.core import setup
+#!/usr/bin/env python
+from setuptools import setup, find_packages
+
 setup(
-  name = 'CarthaGo',
-  packages = ['CarthaGo'],
+  name = 'cartago',
+  packages = find_packages(),
+  install_requires=['pbxproj==2.1.2'],
+  entry_points={
+    'console_scripts': [
+        'cartago = cartago.cartago:main'
+    ]
+  },
   version = '0.1',
   description = 'An automated framework installer using carthage',
   author = 'HELM S.C.P.',
